@@ -35,11 +35,10 @@ pipeline {
 
         stage('Despliegue local') {
             steps {
-                bat 'docker rm -f ev3-secure-app || exit /b 0'
                 bat 'docker rm -f ev3-secure-app-running || exit /b 0'
-                bat 'docker run -d --name ev3-secure-app-running -p 5000:5000 ev3-secure-app:%BUILD_NUMBER%'
+                bat 'docker run -d --name ev3-secure-app-running -p 5001:5000 ev3-secure-app:%BUILD_NUMBER%'
                 bat 'timeout /t 5'
-                bat 'curl -f http://localhost:5000/'
+                bat 'curl -f http://localhost:5001/'
             }
         }
 
@@ -50,7 +49,7 @@ pipeline {
                 -v "%cd%:/zap/wrk:rw" ^
                 ghcr.io/zaproxy/zaproxy:stable ^
                 zap-baseline.py ^
-                -t http://host.docker.internal:5000 ^
+                -t http://host.docker.internal:5001 ^
                 -r zap_report.html || exit /b 0
                 '''
             }
