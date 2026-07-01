@@ -16,15 +16,16 @@ pipeline {
 
         stage('Pruebas unitarias') {
             steps {
-                bat 'docker run --rm ev3-secure-app:%BUILD_NUMBER% pytest -q'
+                bat 'docker run --rm -e PYTHONPATH=/app ev3-secure-app:%BUILD_NUMBER% pytest -q'
             }
         }
 
         stage('Revision SAST con Bandit') {
             steps {
-                bat 'docker run --rm ev3-secure-app:%BUILD_NUMBER% bandit -r app -ll'
+                bat 'docker run --rm -e PYTHONPATH=/app ev3-secure-app:%BUILD_NUMBER% bandit -r app -ll'
             }
         }
+        
 
         stage('Auditoria de dependencias') {
             steps {
