@@ -35,9 +35,10 @@ pipeline {
 
         stage('Despliegue local') {
             steps {
+                bat 'docker rm -f ev3-secure-app || exit /b 0'
                 bat 'docker rm -f ev3-secure-app-running || exit /b 0'
                 bat 'docker run -d --name ev3-secure-app-running -p 5001:5000 ev3-secure-app:%BUILD_NUMBER%'
-                bat 'timeout /t 5'
+                bat 'powershell -NoProfile -Command "Start-Sleep -Seconds 5"'
                 bat 'curl -f http://localhost:5001/'
             }
         }
